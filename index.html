@@ -16,9 +16,11 @@
             font-family: 'Outfit', sans-serif;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-start;
             align-items: center;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: hidden;
             transition: background 1s ease;
         }
 
@@ -76,6 +78,7 @@
             max-width: 650px;
             padding: 20px;
             z-index: 10;
+            flex-shrink: 0;
         }
 
         /* ── Apology Page ────────────────────────────── */
@@ -119,12 +122,12 @@
         }
 
         .subtitle {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.95rem;
             font-weight: 300;
             letter-spacing: 4px;
             text-transform: uppercase;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         /* ── Question text ───────────────────────────── */
@@ -132,7 +135,7 @@
             color: #fff;
             font-size: 2.2rem;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             line-height: 1.4;
             background: linear-gradient(90deg, #f7c948, #e94560, #f7c948);
             background-size: 200% auto;
@@ -149,34 +152,25 @@
         }
 
         .question-sub {
-            color: rgba(255, 255, 255, 0.55);
-            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.95rem;
             font-weight: 300;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-style: italic;
         }
 
-        /* ── GIF on apology page ─────────────────────── */
-        .apology-gif {
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid rgba(233, 69, 96, 0.5);
-            box-shadow: 0 0 40px rgba(233, 69, 96, 0.3), 0 10px 40px rgba(0, 0, 0, 0.4);
-            margin-bottom: 25px;
-            animation: gifFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes gifFloat {
-            0%, 100% { transform: translateY(0) rotate(-2deg); }
-            50% { transform: translateY(-12px) rotate(2deg); }
+        .sarcastic-note {
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 0.8rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+            font-style: italic;
         }
 
         /* ── Buttons container ───────────────────────── */
         .buttons-container {
             position: relative;
-            height: 200px;
+            height: 160px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -232,6 +226,34 @@
             background: linear-gradient(135deg, #4a4a6c, #3a3a5c);
         }
 
+        /* ── Willem Dafoe GIF — peeking from bottom ──── */
+        .dafoe-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            pointer-events: none;
+            animation: dafoeRise 1.5s ease-out forwards;
+        }
+
+        @keyframes dafoeRise {
+            from {
+                transform: translateX(-50%) translateY(60%);
+            }
+            to {
+                transform: translateX(-50%) translateY(0%);
+            }
+        }
+
+        .dafoe-gif {
+            width: 380px;
+            max-width: 80vw;
+            display: block;
+            border-radius: 20px 20px 0 0;
+            filter: drop-shadow(0 -10px 40px rgba(233, 69, 96, 0.3));
+        }
+
         /* ── Forgiven Page ───────────────────────────── */
         .forgiven-title {
             font-size: 3rem;
@@ -242,7 +264,7 @@
         }
 
         .forgiven-subtitle {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 300;
             color: rgba(255, 255, 255, 0.85);
             margin-bottom: 25px;
@@ -264,11 +286,11 @@
         }
 
         .forgiven-message {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.85);
             line-height: 1.6;
             max-width: 500px;
-            margin: 0 auto 20px;
+            margin: 0 auto 15px;
         }
 
         .youre-great {
@@ -281,6 +303,13 @@
             background-clip: text;
             animation: shimmerText 2s linear infinite;
             margin-top: 10px;
+        }
+
+        .sarcastic-footer {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+            font-style: italic;
+            margin-top: 15px;
         }
 
         /* ── Confetti ────────────────────────────────── */
@@ -322,7 +351,7 @@
             .question { font-size: 1.6rem; }
             .btn-yes { font-size: 1.4rem; padding: 18px 45px; }
             .btn-no { font-size: 0.9rem; padding: 12px 28px; }
-            .apology-gif { width: 160px; height: 160px; }
+            .dafoe-gif { width: 280px; }
             .forgiven-title { font-size: 2.2rem; }
             .youre-great { font-size: 1.8rem; }
         }
@@ -330,7 +359,7 @@
         @media (max-width: 400px) {
             .sorry-title { font-size: 2rem; }
             .question { font-size: 1.3rem; }
-            .apology-gif { width: 130px; height: 130px; }
+            .dafoe-gif { width: 220px; }
         }
     </style>
 </head>
@@ -343,13 +372,12 @@
 
         <!-- ══════ PAGE 1: APOLOGY ══════ -->
         <div id="apologyPage">
-            <p class="subtitle">please please please</p>
+            <p class="subtitle">okay fine, i messed up 🙄</p>
             <h1 class="sorry-title">I'm Sorry 💔</h1>
 
-            <img src="willem-dafoe.gif" alt="Sorry face" class="apology-gif" id="sorryGif">
-
             <p class="question">Nannu Kshamistavaa Bhavana? 🥺</p>
-            <p class="question-sub">Will you forgive me?</p>
+            <p class="question-sub">(just say yes already, this is embarrassing)</p>
+            <p class="sarcastic-note">— your friend who knows they're wrong but still has attitude —</p>
 
             <div class="buttons-container" id="btnContainer">
                 <button class="btn btn-yes" id="yesBtn" onclick="forgiven()">YES 💖</button>
@@ -359,18 +387,27 @@
 
         <!-- ══════ PAGE 2: FORGIVEN ══════ -->
         <div id="forgivenPage">
-            <h1 class="forgiven-title">🎉 Thank You for Forgiving Me! 🎉</h1>
-            <p class="forgiven-subtitle">I promise I'll be better 💕</p>
+            <h1 class="forgiven-title">🎉 Finally! Took You Long Enough! 🎉</h1>
+            <p class="forgiven-subtitle">Thank you for forgiving me, even though you had no other option 😌</p>
 
             <img src="thank-you-crying-sad-meme-r2bd6c28dn4bt32k.gif" alt="Thank you crying meme" class="thankyou-gif">
 
             <p class="forgiven-message">
-                I really don't deserve you, but I'm so grateful you gave me another chance. 🥹
+                Okay but for real — thanks for putting up with my nonsense. You're stuck with me whether you like it or not 😤💕
             </p>
 
             <p class="youre-great">YOU'RE GREAT! 🌟</p>
+
+            <p class="sarcastic-footer">
+                (don't let this go to your head though)
+            </p>
         </div>
 
+    </div>
+
+    <!-- Willem Dafoe peeking from the bottom -->
+    <div class="dafoe-container" id="dafoeContainer">
+        <img src="willem-dafoe.gif" alt="Willem Dafoe looking up" class="dafoe-gif">
     </div>
 
     <script>
@@ -402,7 +439,8 @@
         const noMessages = [
             "NO 😤", "Nope!", "Nah 🙅", "Try again!", "Can't click me! 😜",
             "Haha!", "Too slow!", "Never! 😈", "Keep trying!", "Almost! 🤭",
-            "Come on...", "So close!", "Not today!", "Think again!", "Really? 🤨"
+            "Seriously? 💀", "So close!", "Not today!", "Lol no!", "Really? 🤨",
+            "Just click YES 🙄"
         ];
 
         function moveNoButton() {
@@ -460,6 +498,9 @@
 
             // Transition after short delay
             setTimeout(() => {
+                // Hide dafoe
+                document.getElementById('dafoeContainer').style.display = 'none';
+
                 document.getElementById('apologyPage').style.display = 'none';
                 document.getElementById('forgivenPage').style.display = 'block';
                 document.body.classList.remove('page-apology');
@@ -495,11 +536,6 @@
                     setTimeout(() => confetti.remove(), 5000);
                 }, i * 25);
             }
-        }
-
-        // ── Close modal on outside click (not needed now but keeping pattern) ──
-        window.onclick = function(event) {
-            // No modal to close in this version
         }
     </script>
 </body>
