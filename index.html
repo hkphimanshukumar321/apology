@@ -210,20 +210,18 @@
             box-shadow: 0 12px 50px rgba(233, 69, 96, 0.8);
         }
 
-        /* ── NO button ───────────────────────────────── */
+        /* ── NO button — uncatchable, free-roaming ────── */
         .btn-no {
             background: linear-gradient(135deg, #3a3a5c, #2a2a4a);
             color: rgba(255, 255, 255, 0.7);
             font-size: 1rem;
             padding: 14px 35px;
-            position: absolute;
+            position: fixed;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: none;
-            z-index: 4;
-        }
-
-        .btn-no:hover {
-            background: linear-gradient(135deg, #4a4a6c, #3a3a5c);
+            transition: transform 0.15s ease-out, left 0.25s ease-out, top 0.25s ease-out;
+            z-index: 50;
+            pointer-events: none;
+            user-select: none;
         }
 
         /* ── Willem Dafoe GIF — peeking from bottom ──── */
@@ -376,13 +374,13 @@
             <h1 class="sorry-title">I'm Sorry 💔</h1>
 
             <p class="question">Nannu Kshamistavaa Bhavana? 🥺</p>
-            <p class="question-sub">(just say yes already, this is embarrassing)</p>
-            <p class="sarcastic-note">— your friend who knows they're wrong but still has attitude —</p>
 
             <div class="buttons-container" id="btnContainer">
                 <button class="btn btn-yes" id="yesBtn" onclick="forgiven()">YES 💖</button>
-                <button class="btn btn-no" id="noBtn">NO 😤</button>
             </div>
+
+            <!-- NO button lives outside container — roams the whole page -->
+            <button class="btn btn-no" id="noBtn">NO 😤</button>
         </div>
 
         <!-- ══════ PAGE 2: FORGIVEN ══════ -->
@@ -432,51 +430,77 @@
         setInterval(createHeart, 600);
         for (let i = 0; i < 12; i++) setTimeout(createHeart, i * 200);
 
-        // ── NO button: runs away ────────────────────────
+        // ── NO button: cursor-repulsion physics ─────────
         const noBtn = document.getElementById('noBtn');
-        const btnContainer = document.getElementById('btnContainer');
-        let noClickCount = 0;
+        const FLEE_RADIUS = 180;   // px — starts running when cursor is this close
+        const FLEE_SPEED = 260;    // px — how far it jumps away
+        let noBtnX = window.innerWidth * 0.7;
+        let noBtnY = window.innerHeight * 0.3;
+        noBtn.style.left = noBtnX + 'px';
+        noBtn.style.top = noBtnY + 'px';
+
         const noMessages = [
-            "NO 😤", "Nope!", "Nah 🙅", "Try again!", "Can't click me! 😜",
-            "Haha!", "Too slow!", "Never! 😈", "Keep trying!", "Almost! 🤭",
-            "Seriously? 💀", "So close!", "Not today!", "Lol no!", "Really? 🤨",
-            "Just click YES 🙄"
+            "NO 😤", "Nope!", "Nah 🙅", "Can't catch me! 😜",
+            "Haha!", "Too slow!", "Never! 😈", "Almost! 🤭",
+            "Seriously? 💀", "Not today!", "Lol no!", "Really? 🤨",
+            "Just click YES 🙄", "Give up! 🏃", "I'm fast! ⚡"
         ];
+        let fleeCount = 0;
 
-        function moveNoButton() {
-            const containerRect = btnContainer.getBoundingClientRect();
-            const btnRect = noBtn.getBoundingClientRect();
-
-            // Random position within container
-            const maxX = containerRect.width - btnRect.width - 10;
-            const maxY = containerRect.height - btnRect.height - 10;
-
-            const randomX = Math.max(0, Math.random() * maxX);
-            const randomY = Math.max(0, Math.random() * maxY);
-
-            noBtn.style.left = randomX + 'px';
-            noBtn.style.top = randomY + 'px';
-
-            // Shake rotation
-            const rotation = Math.random() * 40 - 20;
-            noBtn.style.transform = 'rotate(' + rotation + 'deg)';
-            setTimeout(() => { noBtn.style.transform = 'rotate(0deg)'; }, 150);
-
-            // Change button text
-            noClickCount++;
-            noBtn.textContent = noMessages[noClickCount % noMessages.length];
-
-            // Shrink the NO button over time
-            const shrinkFactor = Math.max(0.6, 1 - noClickCount * 0.03);
-            noBtn.style.fontSize = (1 * shrinkFactor) + 'rem';
+        function clamp(val, min, max) {
+            return Math.min(Math.max(val, min), max);
         }
 
-        noBtn.addEventListener('mouseover', moveNoButton);
-        noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            moveNoButton();
+        document.addEventListener('mousemove', (e) => {
+            const btnRect = noBtn.getBoundingClientRect();
+            const btnCX = btnRect.left + btnRect.width / 2;
+            const btnCY = btnRect.top + btnRect.height / 2;
+
+            const dx = btnCX - e.clientX;
+            const dy = btnCY - e.clientY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < FLEE_RADIUS) {
+                // Calculate flee direction (away from cursor)
+                const angle = Math.atan2(dy, dx);
+                // Add some randomness so it doesn't just go in a straight line
+                const randomAngle = angle + (Math.random() - 0.5) * 1.2;
+                const fleeDist = FLEE_SPEED + Math.random() * 80;
+
+                noBtnX += Math.cos(randomAngle) * fleeDist;
+                noBtnY += Math.sin(randomAngle) * fleeDist;
+
+                // Keep within viewport
+                noBtnX = clamp(noBtnX, 10, window.innerWidth - btnRect.width - 10);
+                noBtnY = clamp(noBtnY, 10, window.innerHeight - btnRect.height - 10);
+
+                // If stuck at an edge, teleport to a random spot
+                if (noBtnX <= 15 || noBtnX >= window.innerWidth - btnRect.width - 15 ||
+                    noBtnY <= 15 || noBtnY >= window.innerHeight - btnRect.height - 15) {
+                    noBtnX = Math.random() * (window.innerWidth - btnRect.width - 100) + 50;
+                    noBtnY = Math.random() * (window.innerHeight - btnRect.height - 100) + 50;
+                }
+
+                noBtn.style.left = noBtnX + 'px';
+                noBtn.style.top = noBtnY + 'px';
+
+                // Spin effect
+                const spin = (Math.random() - 0.5) * 50;
+                noBtn.style.transform = 'rotate(' + spin + 'deg)';
+                setTimeout(() => { noBtn.style.transform = 'rotate(0deg)'; }, 200);
+
+                // Cycle text
+                fleeCount++;
+                noBtn.textContent = noMessages[fleeCount % noMessages.length];
+            }
         });
-        noBtn.addEventListener('click', moveNoButton);
+
+        // Touch support for mobile
+        document.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            const fakeEvent = { clientX: touch.clientX, clientY: touch.clientY };
+            document.dispatchEvent(new MouseEvent('mousemove', fakeEvent));
+        }, { passive: true });
 
         // ── YES button: transition to forgiven page ─────
         function forgiven() {
