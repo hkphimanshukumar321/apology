@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I'm Sorry 💔</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: background 1s ease;
+        }
+
+        /* ── Page 1: Apology ─────────────────────────── */
+        body.page-apology {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+        }
+
+        /* ── Page 2: Forgiven ────────────────────────── */
+        body.page-forgiven {
+            background: linear-gradient(135deg, #0d7377 0%, #14ffec 50%, #0d7377 100%);
+        }
+
+        /* ── Floating hearts background ──────────────── */
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.15;
+            animation: floatHeart linear infinite;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.15;
+            }
+            90% {
+                opacity: 0.15;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* ── Container ───────────────────────────────── */
+        .container {
+            text-align: center;
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        /* ── Apology Page ────────────────────────────── */
+        #apologyPage {
+            animation: fadeSlideIn 0.8s ease;
+        }
+
+        #forgivenPage {
+            display: none;
+            animation: fadeSlideIn 0.8s ease;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Title ───────────────────────────────────── */
+        .sorry-title {
+            color: #e94560;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-shadow: 0 0 30px rgba(233, 69, 96, 0.4);
+            animation: sorryPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes sorryPulse {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(233, 69, 96, 0.3), 0 0 40px rgba(233, 69, 96, 0.1);
+            }
+            50% {
+                text-shadow: 0 0 40px rgba(233, 69, 96, 0.6), 0 0 80px rgba(233, 69, 96, 0.3), 0 0 120px rgba(233, 69, 96, 0.1);
+            }
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+        }
+
+        /* ── Question text ───────────────────────────── */
+        .question {
+            color: #fff;
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            background: linear-gradient(90deg, #f7c948, #e94560, #f7c948);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerText 3s linear infinite;
+        }
+
+        @keyframes shimmerText {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .question-sub {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 1rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* ── GIF on apology page ─────────────────────── */
+        .apology-gif {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(233, 69, 96, 0.5);
+            box-shadow: 0 0 40px rgba(233, 69, 96, 0.3), 0 10px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 25px;
+            animation: gifFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes gifFloat {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
+
+        /* ── Buttons container ───────────────────────── */
+        .buttons-container {
+            position: relative;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        /* ── YES button ──────────────────────────────── */
+        .btn-yes {
+            background: linear-gradient(135deg, #e94560, #c62a47);
+            color: white;
+            font-size: 1.8rem;
+            padding: 22px 60px;
+            box-shadow: 0 8px 30px rgba(233, 69, 96, 0.5), 0 0 60px rgba(233, 69, 96, 0.15);
+            animation: yesBreath 2s ease-in-out infinite;
+            position: relative;
+            z-index: 5;
+        }
+
+        @keyframes yesBreath {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 30px rgba(233, 69, 96, 0.5); }
+            50% { transform: scale(1.06); box-shadow: 0 12px 45px rgba(233, 69, 96, 0.7); }
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.12) !important;
+            box-shadow: 0 12px 50px rgba(233, 69, 96, 0.8);
+        }
+
+        /* ── NO button ───────────────────────────────── */
+        .btn-no {
+            background: linear-gradient(135deg, #3a3a5c, #2a2a4a);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            padding: 14px 35px;
+            position: absolute;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: none;
+            z-index: 4;
+        }
+
+        .btn-no:hover {
+            background: linear-gradient(135deg, #4a4a6c, #3a3a5c);
+        }
+
+        /* ── Forgiven Page ───────────────────────────── */
+        .forgiven-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .forgiven-subtitle {
+            font-size: 1.6rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 25px;
+        }
+
+        .thankyou-gif {
+            width: 300px;
+            max-width: 90%;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            margin-bottom: 25px;
+            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .forgiven-message {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto 20px;
+        }
+
+        .youre-great {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #f7c948, #fff, #f7c948);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerText 2s linear infinite;
+            margin-top: 10px;
+        }
+
+        /* ── Confetti ────────────────────────────────── */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            z-index: 9999;
+            animation: confetti-fall 3s linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes confetti-fall {
+            0% { opacity: 1; }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* ── Sparkle burst on YES click ──────────────── */
+        .sparkle-ring {
+            position: fixed;
+            border-radius: 50%;
+            border: 3px solid #e94560;
+            animation: sparkleExpand 0.8s ease-out forwards;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        @keyframes sparkleExpand {
+            0% { width: 0; height: 0; opacity: 1; }
+            100% { width: 300px; height: 300px; opacity: 0; margin-top: -150px; margin-left: -150px; }
+        }
+
+        /* ── Responsive ──────────────────────────────── */
+        @media (max-width: 768px) {
+            .sorry-title { font-size: 2.5rem; }
+            .question { font-size: 1.6rem; }
+            .btn-yes { font-size: 1.4rem; padding: 18px 45px; }
+            .btn-no { font-size: 0.9rem; padding: 12px 28px; }
+            .apology-gif { width: 160px; height: 160px; }
+            .forgiven-title { font-size: 2.2rem; }
+            .youre-great { font-size: 1.8rem; }
+        }
+
+        @media (max-width: 400px) {
+            .sorry-title { font-size: 2rem; }
+            .question { font-size: 1.3rem; }
+            .apology-gif { width: 130px; height: 130px; }
+        }
+    </style>
+</head>
+<body class="page-apology">
+
+    <!-- Floating broken hearts background -->
+    <div class="floating-hearts" id="floatingHearts"></div>
+
+    <div class="container">
+
+        <!-- ══════ PAGE 1: APOLOGY ══════ -->
+        <div id="apologyPage">
+            <p class="subtitle">please please please</p>
+            <h1 class="sorry-title">I'm Sorry 💔</h1>
+
+            <img src="willem-dafoe.gif" alt="Sorry face" class="apology-gif" id="sorryGif">
+
+            <p class="question">Nannu Kshamistavaa Bhavana? 🥺</p>
+            <p class="question-sub">Will you forgive me?</p>
+
+            <div class="buttons-container" id="btnContainer">
+                <button class="btn btn-yes" id="yesBtn" onclick="forgiven()">YES 💖</button>
+                <button class="btn btn-no" id="noBtn">NO 😤</button>
+            </div>
+        </div>
+
+        <!-- ══════ PAGE 2: FORGIVEN ══════ -->
+        <div id="forgivenPage">
+            <h1 class="forgiven-title">🎉 Thank You for Forgiving Me! 🎉</h1>
+            <p class="forgiven-subtitle">I promise I'll be better 💕</p>
+
+            <img src="thank-you-crying-sad-meme-r2bd6c28dn4bt32k.gif" alt="Thank you crying meme" class="thankyou-gif">
+
+            <p class="forgiven-message">
+                I really don't deserve you, but I'm so grateful you gave me another chance. 🥹
+            </p>
+
+            <p class="youre-great">YOU'RE GREAT! 🌟</p>
+        </div>
+
+    </div>
+
+    <script>
+        // ── Floating hearts ─────────────────────────────
+        const heartsContainer = document.getElementById('floatingHearts');
+        const heartEmojis = ['💔', '😢', '🥺', '💕', '🙏', '❤️‍🩹'];
+
+        function createHeart() {
+            const heart = document.createElement('span');
+            heart.className = 'heart';
+            heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.fontSize = (Math.random() * 1.5 + 0.8) + 'rem';
+            heart.style.animationDuration = (Math.random() * 6 + 6) + 's';
+            heart.style.animationDelay = (Math.random() * 2) + 's';
+            heartsContainer.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 14000);
+        }
+
+        // Spawn hearts continuously
+        setInterval(createHeart, 600);
+        for (let i = 0; i < 12; i++) setTimeout(createHeart, i * 200);
+
+        // ── NO button: runs away ────────────────────────
+        const noBtn = document.getElementById('noBtn');
+        const btnContainer = document.getElementById('btnContainer');
+        let noClickCount = 0;
+        const noMessages = [
+            "NO 😤", "Nope!", "Nah 🙅", "Try again!", "Can't click me! 😜",
+            "Haha!", "Too slow!", "Never! 😈", "Keep trying!", "Almost! 🤭",
+            "Come on...", "So close!", "Not today!", "Think again!", "Really? 🤨"
+        ];
+
+        function moveNoButton() {
+            const containerRect = btnContainer.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+
+            // Random position within container
+            const maxX = containerRect.width - btnRect.width - 10;
+            const maxY = containerRect.height - btnRect.height - 10;
+
+            const randomX = Math.max(0, Math.random() * maxX);
+            const randomY = Math.max(0, Math.random() * maxY);
+
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+
+            // Shake rotation
+            const rotation = Math.random() * 40 - 20;
+            noBtn.style.transform = 'rotate(' + rotation + 'deg)';
+            setTimeout(() => { noBtn.style.transform = 'rotate(0deg)'; }, 150);
+
+            // Change button text
+            noClickCount++;
+            noBtn.textContent = noMessages[noClickCount % noMessages.length];
+
+            // Shrink the NO button over time
+            const shrinkFactor = Math.max(0.6, 1 - noClickCount * 0.03);
+            noBtn.style.fontSize = (1 * shrinkFactor) + 'rem';
+        }
+
+        noBtn.addEventListener('mouseover', moveNoButton);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveNoButton();
+        });
+        noBtn.addEventListener('click', moveNoButton);
+
+        // ── YES button: transition to forgiven page ─────
+        function forgiven() {
+            // Sparkle burst at button location
+            const yesBtn = document.getElementById('yesBtn');
+            const rect = yesBtn.getBoundingClientRect();
+            for (let i = 0; i < 3; i++) {
+                const ring = document.createElement('div');
+                ring.className = 'sparkle-ring';
+                ring.style.left = (rect.left + rect.width / 2) + 'px';
+                ring.style.top = (rect.top + rect.height / 2) + 'px';
+                ring.style.animationDelay = (i * 0.15) + 's';
+                document.body.appendChild(ring);
+                setTimeout(() => ring.remove(), 1200);
+            }
+
+            // Confetti explosion
+            createConfetti();
+
+            // Transition after short delay
+            setTimeout(() => {
+                document.getElementById('apologyPage').style.display = 'none';
+                document.getElementById('forgivenPage').style.display = 'block';
+                document.body.classList.remove('page-apology');
+                document.body.classList.add('page-forgiven');
+
+                // Change floating emojis to happy ones
+                heartEmojis.length = 0;
+                heartEmojis.push('💖', '✨', '🌟', '🎉', '🥳', '💕', '🎊');
+
+                // Second confetti wave
+                setTimeout(createConfetti, 500);
+            }, 700);
+        }
+
+        // ── Confetti ────────────────────────────────────
+        function createConfetti() {
+            const colors = ['#e94560', '#f7c948', '#14ffec', '#ff6ec7', '#667eea', '#ffd700', '#ff4081', '#00e5ff'];
+            const shapes = ['■', '●', '▲', '♦', '★'];
+
+            for (let i = 0; i < 80; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.top = '-15px';
+                    confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.fontSize = (Math.random() * 14 + 8) + 'px';
+                    confetti.style.animationDuration = (Math.random() * 2.5 + 2) + 's';
+                    confetti.style.animationDelay = (Math.random() * 0.3) + 's';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 25);
+            }
+        }
+
+        // ── Close modal on outside click (not needed now but keeping pattern) ──
+        window.onclick = function(event) {
+            // No modal to close in this version
+        }
+    </script>
+</body>
+</html>
